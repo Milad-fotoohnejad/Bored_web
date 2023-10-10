@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+    <script type="importmap">
+            {
+              "imports": {
+                "React": "https://unpkg.com/es-react@latest/dev/react.js",
+                "ReactDOM": "https://unpkg.com/es-react@latest/dev/react-dom.js",
+                "htm": "https://unpkg.com/htm@latest?module"
+              }
+            }
+          </script>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .vertical-center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+
+        #h1 {
+            transition: background 1s;
+        }
+
+        body {
+            font: larger;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: normal;
+        }
+
+        #myVideo {
+            position: fixed;
+            right: 0;
+            bottom: 1;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            background-image: url(joel-filipe-unsplash.jpg);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+</head>
+
+<body class="h-100 bg-dark">
+
+    <!-- ---------------- navigation section ----------------- -->
+    <header id="background" class="mb-auto rounded bg-secondary bg-opacity-25 fixed-top">
+        <div>
+            <h3 class="float-md-start mt-2 mx-4 text-center">Bored?
+            </h3>
+            <nav class="nav nav-masthead justify-content-center mt-2 float-md-end">
+                <a class="nav-link active" aria-current="page" href="index.html">BoredRoom</a>
+                <a class="nav-link" href="Feelings.html">Feelings</a>
+                <a class="nav-link" href="form.html">Remember Me!</a>
+            </nav>
+        </div>
+    </header>
+    <!-- ---------------- navigation section ----------------- -->
+
+    <!-- ---------------- Bavckground Video section ------------------- -->
+    <div id="myVid">
+        <video autoplay muted loop id="myVideo">
+            <source src="FeelingsBack.mp4" type="video/mp4">
+        </video>
+    </div>
+    <!-- ---------------- Bavckground Video section ------------------- -->
+
+    <div class="container">
+        <div class="row">
+            <!-- app container -->
+            <div class="mt-5 pics-container">
+
+            </div>
+            <!-- app container -->
+        </div>
+    </div>
+
+    <div>
+
+        <script>
+            // ------------------ Random Color Generator section -----------------------
+
+            const background = document.getElementById("background");
+
+            const getRandomNumber = (maxNum) => {
+                return Math.floor(Math.random() * maxNum);
+            };
+
+            const getRandomColor = () => {
+                const h = getRandomNumber(360);
+                const s = getRandomNumber(100);
+                const l = getRandomNumber(100);
+
+                return `hsl(${h}deg, ${s}%, ${l}%)`;
+            };
+
+            const setBackgroundColor = () => {
+                const randomColor = getRandomColor();
+                background.style.backgroundColor = randomColor;
+                background.style.color = randomColor;
+            };
+
+            setBackgroundColor();
+
+            setInterval(() => {
+                setBackgroundColor();
+            }, 3000);
+
+            // ------------------ Random Color Generator section -----------------------
+        </script>
+
+
+        <script type="module">
+            import React from "https://unpkg.com/es-react@latest/dev/react.js";
+            import ReactDOM from "https://unpkg.com/es-react@latest/dev/react-dom.js";
+            import htm from "https://unpkg.com/htm@latest?module";
+            const html = htm.bind(React.createElement);
+            const app = document.querySelector(".pics-container");
+            //import useState hook to get the state of the letiable
+            import { useState } from 'React';
+            //the app function will run your code
+            function App() {
+                const [nasa, setNasa] = useState("");
+                const [nasaTitle, setNasaTitle] = useState("");
+                const [nasaCopy, setNasaCopy] = useState("");
+                const [nasaExpl, setNasaExpl] = useState("");
+                //fetch the data from the api
+                const fetchFromApi = async () => {
+                    const urlNasa = new URL("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+                    let response = await fetch(urlNasa);
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data);
+                        setNasa(data.url);
+                        setNasaTitle(data.title);
+                        setNasaCopy(data.copyright);
+                        setNasaExpl(data.explanation);
+                    }
+                    else {
+                        alert(`${response.status}`);
+                    }
+                }
+
+                //show the data in a bootstrap card on web page with JSX (Use ClassName instead of Class)
+                return html`
+                    <div className="p-5 mb-4 text-light text-center bg-dark bg-opacity-25 rounded-3">
+                        <div className="container-fluid py-5">
+                            <h1 className="display-5 fw-bold">The universe Is Here!</h1>
+                            <p className="fs-4">Can you believe!? NO?</p>
+                            <p className="fs-4">Check it out! An art by: ${nasaCopy}</p>
+                            <p className="fs-4">This is a... ${nasaTitle}</p>
+                            <img className="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto m-5 rounded-2" src="${nasa}"/>
+                            <p className="fs-4 bg-dark bg-opacity-50 rounded-3">${nasaExpl}</p>
+                            <button className="col-md-8 m-4 ml-3 btn btn-outline-info" onClick=${fetchFromApi}>Show me!</button>
+                            
+                        </div>
+                    </div>
+                        `
+            };
+
+            ReactDOM.render(
+                html`<${App} />`,
+                app
+            );
+
+
+        </script>
+
+
+
+
+    </div>
+    <footer class="mt-5 text-center text-white-50 fixed-bottom">
+        <p> Background video is a great art by <a
+                href="https://www.pexels.com/video/pattern-abstract-slow-motion-colours-3968197/"
+                class="text-white">StefWithAnF.</a> </p>
+    </footer>
+</body>
+
+</html>
